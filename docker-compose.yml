@@ -1,0 +1,25 @@
+version: '3'
+
+volumes:
+  jupyter-libraries:
+
+services:
+  python-libraries:
+    build:
+      context: .
+      dockerfile: Dockerfile.libraries
+    volumes:
+      - jupyter-libraries:/libraries
+
+  jupyter:
+    build:
+      context: .
+      dockerfile: Dockerfile.jupyter
+    image: jupyter-custom:latest
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./notebooks:/app/notebooks
+      - jupyter-libraries:/libraries
+    depends_on:
+      - python-libraries
